@@ -5,8 +5,9 @@ const jwt = require("jsonwebtoken");
 const {actionResponse, errorResponse} = require("../../helpers/utils");
 let encryptedPassword;
 exports.user_create = async (req, res, next) => {
+    console.log(req.body)
     try {
-        const { userName, email, password, role, avatar } = req.body
+        const { userName, email, password, role, avatar, category, survey } = req.body
 
         body('userName', 'Username must not be empty.').isLength({ min: 4 }).escape()
         body('email', 'Email must not be empty.').trim().isEmail().escape()
@@ -27,6 +28,8 @@ exports.user_create = async (req, res, next) => {
             role: role,
             avatar: avatar,
             created: new Date(),
+            category,
+            survey
         })
 
         const token = jwt.sign(

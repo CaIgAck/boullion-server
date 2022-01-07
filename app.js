@@ -7,6 +7,9 @@ const logger = require('morgan');
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const authRouter = require('./routes/auth');
+const surveyRouter = require('./routes/survey')
+const profileRouter = require('./routes/profile')
+
 const verifyToken = require("./middleware/auth");
 
 require("dotenv").config();
@@ -29,6 +32,8 @@ app.use(verifyToken)
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/auth', authRouter);
+app.use('/survey', surveyRouter);
+app.use('/profile', profileRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

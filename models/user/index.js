@@ -14,13 +14,13 @@ const user = new Schema({
     category: {
         type: Schema.Types.ObjectId,
         ref: 'category',
-        required: false,
+        required: true,
         default: null
     },
     survey: {
         type: Schema.Types.ObjectId,
         ref: 'survey',
-        required: false,
+        required: true,
         default: null
     }
 })

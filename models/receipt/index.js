@@ -9,14 +9,17 @@ const receipt = new Schema({
         ref: 'category',
         required: true
     },
-    ingredient: {
-        type: Schema.Types.ObjectId,
-        ref: 'ingredient',
-        required: true
-    },
+    ingredients: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'ingredient',
+            required: true
+        }
+    ],
     receiptName: String,
     img: String,
-    receiptDescription: String
+    receiptDescription: String,
+    status: String
 });
 
 module.exports = mongoose.model('receipt', receipt)
