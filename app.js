@@ -9,6 +9,7 @@ const usersRouter = require('./routes/users');
 const authRouter = require('./routes/auth');
 const surveyRouter = require('./routes/survey')
 const profileRouter = require('./routes/profile')
+const receiptRouter = require('./routes/receipt')
 
 const verifyToken = require("./middleware/auth");
 
@@ -34,6 +35,7 @@ app.use('/users', usersRouter);
 app.use('/auth', authRouter);
 app.use('/survey', surveyRouter);
 app.use('/profile', profileRouter);
+app.use('/receipt', receiptRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

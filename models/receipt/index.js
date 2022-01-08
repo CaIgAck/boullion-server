@@ -9,10 +9,10 @@ const receipt = new Schema({
         ref: 'category',
         required: true
     },
-    ingredients: [
+    ingredientAmount: [
         {
             type: Schema.Types.ObjectId,
-            ref: 'ingredient',
+            ref: 'ingredientAmount',
             required: true
         }
     ],
