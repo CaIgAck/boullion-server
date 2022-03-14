@@ -36,7 +36,7 @@ exports.create_survey = async (req, res, next) => {
 exports.survey_details = async (req, res) => {
     try {
         const { id } = req.params
-        const foundSurvey = survey.findOne({_id: id})
+        const foundSurvey = await survey.findOne({_id: id})
 
         if(foundSurvey) {
             return res.json(actionResponse({model: foundSurvey}))

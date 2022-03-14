@@ -1,4 +1,5 @@
 const jwt = require("jsonwebtoken");
+const {errorResponse} = require("../../helpers/utils");
 
 const config = process.env;
 
@@ -11,7 +12,11 @@ const verifyToken = (req, res, next) => {
         return next()
     }
     if (!token) {
-        return res.status(403).send("A token is required for authentication");
+        const error = {
+            message: 'Токен обязателен для аунтефикации',
+            error: 403
+        }
+        return res.status(403).json(errorResponse({error}));
     }
     try {
         const decoded = jwt.verify(token, config.TOKEN_KEY);

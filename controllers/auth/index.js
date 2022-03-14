@@ -5,7 +5,6 @@ const jwt = require("jsonwebtoken");
 const {actionResponse, errorResponse} = require("../../helpers/utils");
 let encryptedPassword;
 exports.user_create = async (req, res, next) => {
-    console.log(req.body)
     try {
         const { userName, email, password, role, avatar, category, survey } = req.body
 
@@ -84,7 +83,7 @@ exports.user_login =  async (req, res) => {
             new_user.token = token;
 
             // user
-            res.status(200).json(actionResponse({model:new_user}));
+            res.status(200).json(actionResponse({model: {token: token}}));
         }
         else {
             const error = {
