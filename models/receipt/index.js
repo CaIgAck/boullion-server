@@ -16,6 +16,18 @@ const receipt = new Schema({
             required: true
         }
     ],
+    createdBy: {
+      type: Schema.Types.ObjectId,
+      ref: 'user',
+      required: false
+    },
+    likeBy: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'user',
+            required: false
+        }
+    ],
     receiptName: String,
     img: String,
     receiptDescription: String,

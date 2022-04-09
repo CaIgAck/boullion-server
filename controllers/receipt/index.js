@@ -2,16 +2,19 @@ const {body, validationResult} = require("express-validator");
 const {actionResponse, listResponse, errorResponse} = require("../../helpers/utils");
 const receipt = require("../../models/receipt")
 const ingredientAmountModel = require("../../models/ingredientAmount")
+function validationRequestData() {
+    body('category', 'category is required field').isLength({min: 1}).exists()
+    body('ingredientAmount', 'ingredientAmount is required field').isArray().exists()
+    body('receiptName', 'receiptName is required field').isLength({min: 4}).exists()
+    body('receiptDescription', 'receiptDescription is required field').isLength({min: 15}).exists()
+     body('status', 'status is required field').isLength({min: 15}).exists()
+}
 exports.crete_receipt = async (req, res) => {
     try {
-        const {category, ingredientAmount, receiptName, img, receiptDescription, status} = req.body
-        body('category', 'category is required field').isLength({min: 1}).exists()
-        body('ingredientAmount', 'ingredientAmount is required field').isArray().exists()
-        body('receiptName', 'receiptName is required field').isLength({min: 4}).exists()
-        body('receiptDescription', 'receiptDescription is required field').isLength({min: 15}).exists()
-        body('status', 'status is required field').isLength({min: 15}).exists()
+        const {category, ingredientAmount, receiptName, img, receiptDescription, status, createdBy, likeBy} = req.body
 
-        console.log(ingredientAmount)
+        validationRequestData()
+
         let ingredientsAmount = [];
         for (let ingredientsAmountElement of ingredientAmount) {
             const ingredientAmount_new = await ingredientAmountModel.create({
@@ -28,7 +31,9 @@ exports.crete_receipt = async (req, res) => {
             receiptName,
             img,
             receiptDescription,
-            status
+            status,
+            createdBy,
+            likeBy
         })
         if (!errors.isEmpty()) {
             return res.status(400).json({errors: errors.array()})
@@ -46,9 +51,10 @@ exports.crete_receipt = async (req, res) => {
 
 exports.receipt_list = async (req, res) => {
     try {
-        const status = req.query.status
+        const {status, likeBy} = req.query
         if(status) {
-            const listReceipt = await receipt.find({status})
+            const listReceipt = await receipt.find({status, likeBy})
+
             return res.json(listResponse({list: listReceipt, request: req}))
         }
         else {
@@ -70,10 +76,43 @@ exports.receipt_list = async (req, res) => {
 exports.receipt_details = async (req, res) => {
     try {
         const { id } = req.params
-        const receipt_details = await receipt.findOne({_id: id})
+        const receipt_details = await receipt.find({_id: id}).populate('ingredientAmount').populate("ingredientAmount.ingredient")
+        console.log(receipt_details)
         if (receipt_details) {
             return res.json(actionResponse({model: receipt_details}))
         } else {
+            res.statusCode = 400
+            const error = {
+                message: 'Receipt not found',
+                error: 400
+            }
+            return res.json(errorResponse({error}))
+        }
+    } catch (e) {
+        res.statusCode = 500
+        const error = {
+            message: 'Request is not working',
+            error: 500
+        }
+        return res.json(errorResponse({error}))
+    }
+}
+exports.receipt_update = async (req, res) => {
+    try {
+        console.log(req.params)
+        const {status,category, ingredientAmount, receiptName, img, receiptDescription} = req.body
+        const {id} = req.params
+        const receipt_details = await receipt.findOne({_id: id})
+        if(receipt_details) {
+            receipt_details.status = status ? status : receipt_details.status
+            receipt_details.receiptName = receiptName ? receiptName : receipt_details.receiptName
+            receipt_details.img = img ? img : receipt_details.img
+            receipt_details.receiptDescription = receiptDescription ? receiptDescription : receipt_details.receiptDescription
+            await receipt_details.save();
+            const receiptUpdated = await receipt.findOne({_id: id})
+            return res.json(actionResponse({model: receiptUpdated}));
+        } else {
+            res.statusCode = 400
             const error = {
                 message: 'Receipt not found',
                 error: 400
@@ -85,6 +124,8 @@ exports.receipt_details = async (req, res) => {
             message: 'Request is not working',
             error: 500
         }
+        res.statusCode = 500
         return res.json(errorResponse({error}))
     }
 }
+
