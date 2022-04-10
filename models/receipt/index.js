@@ -31,7 +31,9 @@ const receipt = new Schema({
     receiptName: String,
     img: String,
     receiptDescription: String,
-    status: String
+    status: String,
+    complexity: String,
+    timeForPreparing: String
 });
 
 module.exports = mongoose.model('receipt', receipt)

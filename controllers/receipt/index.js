@@ -7,11 +7,11 @@ function validationRequestData() {
     body('ingredientAmount', 'ingredientAmount is required field').isArray().exists()
     body('receiptName', 'receiptName is required field').isLength({min: 4}).exists()
     body('receiptDescription', 'receiptDescription is required field').isLength({min: 15}).exists()
-     body('status', 'status is required field').isLength({min: 15}).exists()
+    body('status', 'status is required field').isLength({min: 15}).exists()
 }
 exports.crete_receipt = async (req, res) => {
     try {
-        const {category, ingredientAmount, receiptName, img, receiptDescription, status, createdBy, likeBy} = req.body
+        const {category, ingredientAmount, receiptName, img, receiptDescription, status, createdBy, likeBy,complexity, timeForPreparing} = req.body
 
         validationRequestData()
 
@@ -33,7 +33,9 @@ exports.crete_receipt = async (req, res) => {
             receiptDescription,
             status,
             createdBy,
-            likeBy
+            likeBy,
+            complexity,
+            timeForPreparing
         })
         if (!errors.isEmpty()) {
             return res.status(400).json({errors: errors.array()})
@@ -51,10 +53,10 @@ exports.crete_receipt = async (req, res) => {
 
 exports.receipt_list = async (req, res) => {
     try {
-        const {status, likeBy} = req.query
-        if(status) {
-            const listReceipt = await receipt.find({status, likeBy})
-
+        const filter = req.query
+        if(filter.status) {
+            const listReceipt = await receipt.find(filter)
+            console.log(listReceipt)
             return res.json(listResponse({list: listReceipt, request: req}))
         }
         else {
@@ -100,7 +102,7 @@ exports.receipt_details = async (req, res) => {
 exports.receipt_update = async (req, res) => {
     try {
         console.log(req.params)
-        const {status,category, ingredientAmount, receiptName, img, receiptDescription} = req.body
+        const {status,category, ingredientAmount, receiptName, img, receiptDescription, timeForPreparing, complexity} = req.body
         const {id} = req.params
         const receipt_details = await receipt.findOne({_id: id})
         if(receipt_details) {
@@ -108,6 +110,8 @@ exports.receipt_update = async (req, res) => {
             receipt_details.receiptName = receiptName ? receiptName : receipt_details.receiptName
             receipt_details.img = img ? img : receipt_details.img
             receipt_details.receiptDescription = receiptDescription ? receiptDescription : receipt_details.receiptDescription
+            receipt_details.timeForPreparing = timeForPreparing ? timeForPreparing : receipt_details.timeForPreparing
+            receipt_details.complexity = complexity ? complexity : receipt_details.complexity
             await receipt_details.save();
             const receiptUpdated = await receipt.findOne({_id: id})
             return res.json(actionResponse({model: receiptUpdated}));

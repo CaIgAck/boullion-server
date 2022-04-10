@@ -8,7 +8,7 @@ const verifyToken = (req, res, next) => {
     const token =
         req.body.token || req.query.token || req.headers["x-access-token"];
 
-    if(path === '/auth/registration' || path === '/auth/login') {
+    if(path === '/auth/registration' || path === '/auth/login' || path === '/Survey') {
         return next()
     }
     if (!token) {

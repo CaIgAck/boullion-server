@@ -1,5 +1,4 @@
 const user = require('../../models/user');
-const { body,validationResult } = require("express-validator");
 const {listResponse, actionResponse, errorResponse} = require("../../helpers/utils");
 
 exports.user_list = (req, res, next) => {
