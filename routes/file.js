@@ -3,6 +3,7 @@ const {create_file} = require("../controllers/file");
 const multer = require("multer");
 const path = require("path");
 const router = express.Router();
+const fs = require('fs')
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -16,8 +17,6 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 
-router.post('/',upload.single('img'), (req, res) => {
-    console.log(req,res)
-});
+router.post('/',upload.single('img'), create_file);
 
 module.exports = router;
