@@ -10,6 +10,8 @@ const surveyRouter = require('./routes/survey')
 const profileRouter = require('./routes/profile')
 const receiptRouter = require('./routes/receipt')
 const ingredientRouter = require('./routes/ingredient')
+const categoriesRouter = require('./routes/categories')
+const fileRouter = require('./routes/file')
 
 const verifyToken = require("./middleware/auth");
 const logError = require("./middleware/logError");
@@ -46,6 +48,8 @@ app.use('/survey', surveyRouter);
 app.use('/profile', profileRouter);
 app.use('/receipt', receiptRouter);
 app.use('/ingredient', ingredientRouter);
+app.use('/categories', categoriesRouter);
+app.use('/file', fileRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -2,6 +2,7 @@ const {body, validationResult} = require("express-validator");
 const {actionResponse, listResponse, errorResponse} = require("../../helpers/utils");
 const receipt = require("../../models/receipt")
 const ingredientAmountModel = require("../../models/ingredientAmount")
+const {create_file} = require("../file");
 function validationRequestData() {
     body('category', 'category is required field').isLength({min: 1}).exists()
     body('ingredientAmount', 'ingredientAmount is required field').isArray().exists()
@@ -14,7 +15,6 @@ exports.crete_receipt = async (req, res) => {
         const {category, ingredientAmount, receiptName, img, receiptDescription, status, createdBy, likeBy,complexity, timeForPreparing} = req.body
 
         validationRequestData()
-
         let ingredientsAmount = [];
         for (let ingredientsAmountElement of ingredientAmount) {
             const ingredientAmount_new = await ingredientAmountModel.create({

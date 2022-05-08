@@ -29,7 +29,11 @@ const receipt = new Schema({
         }
     ],
     receiptName: String,
-    img: String,
+    img: {
+        type: Schema.Types.ObjectId,
+        ref: 'file',
+        required: true
+    },
     receiptDescription: String,
     status: String,
     complexity: String,

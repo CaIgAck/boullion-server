@@ -1,5 +1,37 @@
-const {category} = require('../../models/category')
-const {actionResponse, errorResponse} = require("../../helpers/utils");
+const category= require('../../models/category')
+const {actionResponse, errorResponse, listResponse} = require("../../helpers/utils");
+const ingredient = require("../../models/ingredient");
+
+
+exports.create_categories = async (req, res) => {
+    try {
+        const {categoryName} = req.body
+        const new_category = new category({
+            categoryName
+        })
+        await new_category.save((err) => {
+            if (err) next(err);
+            res.json(actionResponse({model:new_category}));
+        })
+    } catch (e) {
+        const error = {
+            message: e ,
+            error: 400
+        }
+        return res.json(errorResponse({error}))
+    }
+}
+
+exports.category_list = async (req, res) => {
+    const {itemCount} = req
+    category.find({}).limit(itemCount ?? 50).exec((err, list) => {
+        if(err) next(err)
+        else {
+            return res.json(listResponse({list, request: req}))
+        }
+    })
+}
+
 exports.category_details = async (req, res) => {
     try {
         const {id} = req.params
