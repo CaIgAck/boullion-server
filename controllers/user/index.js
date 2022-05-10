@@ -12,7 +12,12 @@ exports.user_list = (req, res, next) => {
 exports.user_details = async (req, res) => {
     try {
         const { id } = req.params
-        const foundUser = await user.findOne({_id: id})
+        const foundUser = await user.findOne({_id: id}).populate([{
+            path: 'survey',
+            populate: {
+                path: 'surveyName'
+            }
+        }])
         if(foundUser) {
             return res.json(actionResponse({model: foundUser}))
         } else {
@@ -30,7 +35,7 @@ exports.user_details = async (req, res) => {
 exports.user_details_by_email = async (req, res) => {
     try {
         const { email } = req.user
-        const foundUser = await user.findOne({email})
+        const foundUser = await user.findOne({email}).populate(['category', 'survey'])
         if(foundUser) {
             return res.json(actionResponse({model: foundUser}))
         } else {

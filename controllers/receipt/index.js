@@ -55,7 +55,7 @@ exports.receipt_list = async (req, res) => {
     try {
         const filter = req.query
         if(filter.status) {
-            const listReceipt = await receipt.find(filter)
+            const listReceipt = await receipt.find(filter).populate(['createdBy', 'img'])
             return res.json(listResponse({list: listReceipt, request: req}))
         }
         else {
@@ -78,12 +78,12 @@ exports.receipt_details = async (req, res) => {
     try {
         const { id } = req.params
         // const receipt_details = await receipt.find({_id: id}).populate('ingredientAmount')
-        const receipt_details = await receipt.find({_id: id}).populate({
+        const receipt_details = await receipt.find({_id: id}).populate([{
             path: 'ingredientAmount',
             populate: {
                 path: 'ingredient'
             }
-        })
+        }, 'img'])
         if (receipt_details) {
             return res.json(actionResponse({model: receipt_details}))
         } else {
