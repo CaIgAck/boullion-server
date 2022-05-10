@@ -105,9 +105,8 @@ exports.receipt_details = async (req, res) => {
 }
 exports.receipt_update = async (req, res) => {
     try {
-        console.log(req.params)
-        const {status,category, ingredientAmount, receiptName, img, receiptDescription, timeForPreparing, complexity} = req.body
-        const {id} = req.params
+        const {status,category, ingredientAmount, receiptName, img, receiptDescription, timeForPreparing, complexity, likeBy} = req.body
+        const { id } = req.params
         const receipt_details = await receipt.findOne({_id: id})
         if(receipt_details) {
             receipt_details.status = status ? status : receipt_details.status
@@ -116,6 +115,7 @@ exports.receipt_update = async (req, res) => {
             receipt_details.receiptDescription = receiptDescription ? receiptDescription : receipt_details.receiptDescription
             receipt_details.timeForPreparing = timeForPreparing ? timeForPreparing : receipt_details.timeForPreparing
             receipt_details.complexity = complexity ? complexity : receipt_details.complexity
+            receipt_details.likeBy = likeBy
             await receipt_details.save();
             const receiptUpdated = await receipt.findOne({_id: id})
             return res.json(actionResponse({model: receiptUpdated}));
