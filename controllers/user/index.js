@@ -1,13 +1,16 @@
 const user = require('../../models/user');
 const {listResponse, actionResponse, errorResponse} = require("../../helpers/utils");
 
-exports.user_list = (req, res, next) => {
-    user.find({}).exec((err, list) => {
-        if(err) next(err)
-        else {
-           return res.json(listResponse({list, request: req}))
-        }
-    })
+exports.user_list = async (req, res) => {
+    try {
+        const filter = req.params
+        const userList = await user.find(filter).populate({
+            path: 'survey'
+        })
+        return res.json(listResponse({list: userList, request: req}))
+    } catch (e) {
+        return res.status(500).json(e)
+    }
 }
 exports.user_details = async (req, res) => {
     try {

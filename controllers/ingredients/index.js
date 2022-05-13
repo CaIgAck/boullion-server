@@ -2,7 +2,7 @@ const ingredient = require("../../models/ingredient");
 const {listResponse, errorResponse, actionResponse} = require("../../helpers/utils");
 exports.ingredients_list = async (req, res) => {
     const {itemCount} = req
-    ingredient.find({}).limit(itemCount ?? 50).exec((err, list) => {
+    ingredient.find({}).limit(itemCount ?? 150).exec((err, list) => {
         if(err) next(err)
         else {
             return res.json(listResponse({list, request: req}))
