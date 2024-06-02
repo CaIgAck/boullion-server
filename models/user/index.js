@@ -7,7 +7,7 @@ const user = new Schema({
     userName: {type:String, required: true},
     email: {type:String, required: true},
     password: {type:String, required: true},
-    avatar: String,
+    avatar: {type: String, required: false},
     role: {type:String, required: true},
     created: {type: Date, default: new Date()},
     token: { type: String },

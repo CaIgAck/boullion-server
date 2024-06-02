@@ -1,6 +1,5 @@
-const category= require('../../models/category')
+const category = require('../../models/category');
 const {actionResponse, errorResponse, listResponse} = require("../../helpers/utils");
-const ingredient = require("../../models/ingredient");
 
 
 exports.create_categories = async (req, res) => {
